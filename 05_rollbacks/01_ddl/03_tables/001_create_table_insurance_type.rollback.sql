@@ -1,0 +1,1 @@
+DROP TABLE booking.insurance_type;

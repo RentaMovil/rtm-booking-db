@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_add_fks_reservation
+      author: thiagxrg
+      comment: >-
+        Adds the FKs whose target tables exist: iam.person and this service's own tables.
+        The FKs to fleet.vehicle, fleet.branch, telemetry.gps, payment.invoice and
+        fleet.vehicle_maintenance wait for those services to be migrated.
+      changes:
+        - sqlFile:
+            path: 001_add_fks_reservation.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/001_add_fks_reservation.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false

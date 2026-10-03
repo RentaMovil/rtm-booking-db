@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_table_insurance_type
+      author: thiagxrg
+      comment: Creates booking.insurance_type.
+      changes:
+        - sqlFile:
+            path: 001_create_table_insurance_type.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/001_create_table_insurance_type.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 002_create_table_reservation
+      author: thiagxrg
+      comment: Creates booking.reservation. FKs are added in 04_alter.
+      changes:
+        - sqlFile:
+            path: 002_create_table_reservation.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/002_create_table_reservation.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 003_create_table_rental
+      author: thiagxrg
+      comment: Creates booking.rental. FKs are added in 04_alter.
+      changes:
+        - sqlFile:
+            path: 003_create_table_rental.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/003_create_table_rental.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 004_create_table_notification
+      author: thiagxrg
+      comment: Creates booking.notification. FKs are added in 04_alter.
+      changes:
+        - sqlFile:
+            path: 004_create_table_notification.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/004_create_table_notification.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false

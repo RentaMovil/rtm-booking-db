@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.rentamovil</groupId>
+    <artifactId>rtm-booking-reservation-db</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>rtm-booking-reservation-db</name>
+    <description>Liquibase migrations for the Booking &amp; Reservation service tables in the shared rentamovil database</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <liquibase.version>5.0.4</liquibase.version>
+        <mssql-jdbc.version>13.6.0.jre11</mssql-jdbc.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
+                <configuration>
+                    <!-- Connection values live in liquibase.properties (not versioned, see liquibase.properties.example) -->
+                    <propertyFile>liquibase.properties</propertyFile>
+                    <searchPath>${project.basedir}</searchPath>
+                    <changeLogFile>changelog/changelog-master.yaml</changeLogFile>
+                    <!-- Own history tables so booking never collides with other services' changelogs in rentamovil -->
+                    <databaseChangeLogTableName>DATABASECHANGELOG_BOOKING</databaseChangeLogTableName>
+                    <databaseChangeLogLockTableName>DATABASECHANGELOGLOCK_BOOKING</databaseChangeLogLockTableName>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.microsoft.sqlserver</groupId>
+                        <artifactId>mssql-jdbc</artifactId>
+                        <version>${mssql-jdbc.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

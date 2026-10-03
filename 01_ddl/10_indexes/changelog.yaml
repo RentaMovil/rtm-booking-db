@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_indexes
+      author: thiagxrg
+      comment: Creates ix_reservation_client_id, ix_reservation_status_reservation_date and ix_notification_person_is_read.
+      changes:
+        - sqlFile:
+            path: 001_create_indexes.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/10_indexes/001_create_indexes.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false

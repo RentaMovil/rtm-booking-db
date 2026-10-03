@@ -1,0 +1,25 @@
+# Migraciones de Booking & Reservation sobre la base compartida "rentamovil".
+# A diferencia de rtm-iam-db, este compose NO levanta SQL Server: esa instancia la levanta
+# rtm-iam-db, que es el primero en correr. Aquí solo se aplican los changesets de este repo.
+services:
+  # Una sola vez: corre las migraciones (lo mismo que "mvn liquibase:update") y se apaga.
+  # Si ya están aplicadas no hace nada. Imagen en el Dockerfile de este repo.
+  migrations:
+    build: .
+    networks: [rentamovil]
+    command:
+      - --url=jdbc:sqlserver://sqlserver:1433;databaseName=${MSSQL_DATABASE:-rentamovil};encrypt=true;trustServerCertificate=true
+      - --username=sa
+      - --password=${MSSQL_SA_PASSWORD}
+      - --search-path=/liquibase/changelog
+      - --changelog-file=changelog/changelog-master.yaml
+      - --database-changelog-table-name=DATABASECHANGELOG_BOOKING
+      - --database-changelog-lock-table-name=DATABASECHANGELOGLOCK_BOOKING
+      - update
+      - -DbookingAppPassword=${BOOKING_APP_PASSWORD}
+    restart: "no"
+
+networks:
+  # Red compartida por todos los servicios de RentaMovil, cada uno desde su propio repo
+  rentamovil:
+    external: true

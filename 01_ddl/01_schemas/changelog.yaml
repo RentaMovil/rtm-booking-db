@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_schema_booking
+      author: thiagxrg
+      comment: Creates the booking schema.
+      changes:
+        - sqlFile:
+            path: 001_create_schema_booking.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/01_schemas/001_create_schema_booking.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
