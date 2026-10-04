@@ -1,0 +1,29 @@
+# Git converts line endings based on core.autocrlf, which would rewrite the .sql files with
+# Windows CRLF. Liquibase checksums change when that happens, so a changeset already applied
+# would show up as modified. Pin LF for everything that reaches the database or the build.
+
+* text=auto eol=lf
+
+*.sql    text eol=lf diff=sql
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.xml    text eol=lf
+*.json   text eol=lf
+*.properties text eol=lf
+
+*.java   text eol=lf
+*.md     text eol=lf
+Dockerfile      text eol=lf
+*.gitignore     text eol=lf
+*.gitattributes text eol=lf
+mvnw            text eol=lf
+mvnw.cmd        text eol=crlf
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+
+# Secrets and keys are binary: never touch their line endings
+*.pem   binary
+*.key   binary
+*.p12   binary
+*.pfx   binary
+*.jks   binary

@@ -1,10 +1,10 @@
--- 06-data/models.md -> rental. The physical execution of a CONFIRMED reservation: pickup → return.
+-- 06-data/models.md -> rental. The physical execution of a CONFIRMED reservation: pickup to return.
 -- Bounded Context "Rental Execution", but deployed inside the booking-reservation service (see
 -- 09-microservices/service-catalog.md for why the three contexts are one deployable).
 CREATE TABLE booking.rental (
     rental_id         INT IDENTITY(1,1) NOT NULL,
     -- 1:1 with reservation (UNIQUE): a reservation is executed exactly once (modeling decision 1).
-    -- The row only exists once pickup is registered — there is no empty "reserved rental" row.
+    -- The row only exists once pickup is registered -- there is no empty "reserved rental" row.
     reservation_id    INT               NOT NULL,
     -- The GPS device the Administrator installed at pickup. Passed in the pickup request body,
     -- not assigned via a call to telemetry-gps (see the service's decisions.md).

@@ -11,7 +11,7 @@ CREATE TABLE booking.reservation (
     -- total calculation never has to null-check it (modeling decision 3).
     insurance_type_id  INT               NULL,
     -- Two separate FKs to branch, not one field: a customer can pick up at one branch and
-    -- return at another — a real feature, not an edge case (modeling decision 1).
+    -- return at another -- a real feature, not an edge case (modeling decision 1).
     pickup_branch_id   INT               NOT NULL,
     return_branch_id   INT               NOT NULL,
     reservation_date   DATETIME          NOT NULL,
