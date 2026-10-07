@@ -16,3 +16,20 @@ databaseChangeLog:
             path: ../../05_rollbacks/01_ddl/04_alter/001_add_fks_reservation.rollback.sql
             relativeToChangelogFile: true
             stripComments: false
+
+  - changeSet:
+      id: 002_add_fks_notification_payment
+      author: thiagxrg
+      comment: >-
+        Adds notification.invoice_id -> payment.invoice and notification.payment_id ->
+        payment.payment, now that rtm-payment-billing-db exists and has migrated.
+      changes:
+        - sqlFile:
+            path: 002_add_fks_notification_payment.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/002_add_fks_notification_payment.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false

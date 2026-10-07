@@ -15,19 +15,19 @@ servicios; ver `rtm-docs/09-microservices/service-catalog.md`).
 
 Convenciones completas (estructura, nombres, orden, rollback): `rtm-docs/06-data/migration-strategy.md`.
 
-## Estado actual: esqueleto
+## Estado actual
 
-El esquema existe y el servicio `rtm-booking-reservation` puede validar contra él, pero
-**todavía no se pueden crear reservas**. Las FKs hacia Fleet & Maintenance, Telemetry & GPS y
-Payment & Billing no están, porque esos servicios aún no existen:
+El esquema existe y el servicio `rtm-booking-reservation` ya crea y gestiona reservas con
+normalidad. Las FKs hacia `payment.invoice`/`payment.payment` se agregaron en
+`04_alter/002_add_fks_notification_payment` una vez que `rtm-payment-billing-db` migró. Quedan
+pendientes las de Fleet & Maintenance y Telemetry & GPS — no bloquean el funcionamiento (las
+columnas ya son `NOT NULL` con el tipo correcto), son integridad adicional a nivel de motor:
 
 | Columna | FK pendiente hacia | Servicio dueño |
 |---------|-------------------|----------------|
 | `reservation.vehicle_id` | `fleet.vehicle` | `fleet-maintenance` |
 | `reservation.pickup_branch_id`, `return_branch_id` | `fleet.branch` | `fleet-maintenance` |
 | `rental.gps_id` | `telemetry.gps` | `telemetry-gps` |
-| `notification.invoice_id` | `payment.invoice` | `payment-billing` |
-| `notification.payment_id` | `payment.payment` | `payment-billing` |
 | `notification.maintenance_id` | `fleet.vehicle_maintenance` | `fleet-maintenance` |
 
 Las columnas ya están declaradas con el tipo y el nombre exactos que dice
