@@ -1,0 +1,1 @@
+REVOKE INSERT ON shared.audit TO booking_app;

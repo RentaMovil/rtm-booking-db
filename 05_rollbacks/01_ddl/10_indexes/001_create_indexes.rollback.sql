@@ -1,0 +1,3 @@
+DROP INDEX ix_notification_person_is_read ON booking.notification;
+DROP INDEX ix_reservation_status_reservation_date ON booking.reservation;
+DROP INDEX ix_reservation_client_id ON booking.reservation;

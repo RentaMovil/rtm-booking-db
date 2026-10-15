@@ -1,0 +1,9 @@
+# Copy to liquibase.properties (never commit it). Read by the Liquibase Maven plugin.
+# Must match the values in .env and in rtm-iam-db/.env for local development.
+url=jdbc:sqlserver://localhost:1433;databaseName=rentamovil;encrypt=true;trustServerCertificate=true
+username=sa
+password=ChangeMe_Local123!
+
+# Password for the booking_app database user created in 03_dcl (the one the service connects with).
+# Must satisfy SQL Server's password policy; use a different value per environment.
+parameter.bookingAppPassword=ChangeMe_BookingApp123!

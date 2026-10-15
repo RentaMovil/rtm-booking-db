@@ -1,0 +1,8 @@
+# Solo los changelogs entran a la imagen: nunca secretos ni builds
+.env
+liquibase.properties
+target/
+.git/
+.idea/
+.vscode/
+*.md

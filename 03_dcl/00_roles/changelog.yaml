@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_login_user_booking_app
+      author: thiagxrg
+      comment: Creates the booking_app login and database user.
+      changes:
+        - sqlFile:
+            path: 001_create_login_user_booking_app.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/03_dcl/00_roles/001_create_login_user_booking_app.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false

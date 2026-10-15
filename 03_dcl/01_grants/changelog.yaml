@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_grant_booking_schema_to_booking_app
+      author: thiagxrg
+      comment: Gives booking_app data access to the booking schema only.
+      changes:
+        - sqlFile:
+            path: 001_grant_booking_schema_to_booking_app.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/03_dcl/01_grants/001_grant_booking_schema_to_booking_app.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 002_grant_insert_audit_to_booking_app
+      author: thiagxrg
+      comment: Lets booking_app append to shared.audit (created by rtm-iam-db, which migrates first).
+      changes:
+        - sqlFile:
+            path: 002_grant_insert_audit_to_booking_app.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/03_dcl/01_grants/002_grant_insert_audit_to_booking_app.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
