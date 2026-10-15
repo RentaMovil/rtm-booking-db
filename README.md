@@ -19,15 +19,15 @@ Convenciones completas (estructura, nombres, orden, rollback): `rtm-docs/06-data
 
 El esquema existe y el servicio `rtm-booking-reservation` ya crea y gestiona reservas con
 normalidad. Las FKs hacia `payment.invoice`/`payment.payment` se agregaron en
-`04_alter/002_add_fks_notification_payment` una vez que `rtm-payment-billing-db` migró. Quedan
-pendientes las de Fleet & Maintenance y Telemetry & GPS — no bloquean el funcionamiento (las
-columnas ya son `NOT NULL` con el tipo correcto), son integridad adicional a nivel de motor:
+`04_alter/002_add_fks_notification_payment` una vez que `rtm-payment-billing-db` migró, y
+`rental.gps_id -> telemetry.gps` en `003_add_fk_rental_gps` una vez que `rtm-telemetry-gps-db`
+migró. Quedan pendientes las de Fleet & Maintenance — no bloquean el funcionamiento (las columnas
+ya son `NOT NULL` con el tipo correcto), son integridad adicional a nivel de motor:
 
 | Columna | FK pendiente hacia | Servicio dueño |
 |---------|-------------------|----------------|
 | `reservation.vehicle_id` | `fleet.vehicle` | `fleet-maintenance` |
 | `reservation.pickup_branch_id`, `return_branch_id` | `fleet.branch` | `fleet-maintenance` |
-| `rental.gps_id` | `telemetry.gps` | `telemetry-gps` |
 | `notification.maintenance_id` | `fleet.vehicle_maintenance` | `fleet-maintenance` |
 
 Las columnas ya están declaradas con el tipo y el nombre exactos que dice
