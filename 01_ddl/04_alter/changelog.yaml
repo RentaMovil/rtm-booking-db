@@ -33,3 +33,20 @@ databaseChangeLog:
             path: ../../05_rollbacks/01_ddl/04_alter/002_add_fks_notification_payment.rollback.sql
             relativeToChangelogFile: true
             stripComments: false
+
+  - changeSet:
+      id: 003_add_fk_rental_gps
+      author: thiagxrg
+      comment: >-
+        Adds rental.gps_id -> telemetry.gps, now that rtm-telemetry-gps-db exists and has
+        migrated. The last FK that 001_add_fks_reservation left pending.
+      changes:
+        - sqlFile:
+            path: 003_add_fk_rental_gps.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/003_add_fk_rental_gps.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
