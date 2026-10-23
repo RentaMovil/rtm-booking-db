@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+# rtm-booking-db has a real circular dependency with rtm-payment-billing-db:
+# booking.notification has FKs to payment.invoice/payment.payment (changeset
+# 002_add_fks_notification_payment, see its comment), and payment's tables
+# reference booking.reservation. Neither repo's changelog can run start to
+# finish before the other has at least created its base tables once. This
+# workflow reproduces the real two-pass order the team already documented:
+#   iam -> telemetry -> booking (1st pass, stops at the payment FK, expected)
+#   -> payment -> booking (2nd pass, now completes)
+jobs:
+  validate-migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v4
+        with:
+          path: own
+
+      - name: Check out rtm-iam-db (starts the shared SQL Server)
+        uses: actions/checkout@v4
+        with:
+          repository: RentaMovil/rtm-iam-db
+          path: rtm-iam-db
+
+      - name: Check out rtm-telemetry-gps-db (booking has a FK to telemetry.gps)
+        uses: actions/checkout@v4
+        with:
+          repository: RentaMovil/rtm-telemetry-gps-db
+          path: rtm-telemetry-gps-db
+
+      - name: Check out rtm-payment-billing-db (the circular dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: RentaMovil/rtm-payment-billing-db
+          path: rtm-payment-billing-db
+
+      - name: Create the shared Docker network
+        run: docker network create rentamovil
+
+      - name: Start SQL Server and apply iam's migrations
+        working-directory: rtm-iam-db
+        env:
+          MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
+          IAM_APP_PASSWORD: "CiOnly_App123!"
+        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
+
+      - name: Apply telemetry-gps's migrations
+        working-directory: rtm-telemetry-gps-db
+        env:
+          MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
+          TELEMETRY_APP_PASSWORD: "CiOnly_App123!"
+        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
+
+      - name: "Apply this repo's migrations (1st pass: stops at the payment FK, expected)"
+        working-directory: own
+        continue-on-error: true
+        env:
+          MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
+          BOOKING_APP_PASSWORD: "CiOnly_App123!"
+        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
+
+      # If this fails, the real bug is almost always in the 1st pass above (the base tables and
+      # the FKs that don't need payment), not here -- check that job's log first.
+      - name: Apply payment-billing's migrations
+        working-directory: rtm-payment-billing-db
+        env:
+          MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
+          PAYMENT_APP_PASSWORD: "CiOnly_App123!"
+        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
+
+      # 2nd pass: payment.invoice/payment.payment now exist, so the FKs that were pending
+      # complete here. This is the step that actually has to pass clean.
+      - name: "Apply this repo's migrations (2nd pass: must complete clean)"
+        working-directory: own
+        env:
+          MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
+          BOOKING_APP_PASSWORD: "CiOnly_App123!"
+        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
